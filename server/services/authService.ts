@@ -29,10 +29,34 @@ export const authService = {
             }
         });
 
-        const token = await this.generateToken(newUser)
+        const token = await this.generateToken(newUser);
         return {
             token,
             user: { id: newUser.id, email: newUser.email }
+        }
+    },
+
+    async login(email: string, password: string) {
+
+        const user = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if (!user) {
+            throw new Error("Invalid user");
+        }
+
+        const isValidUser = await bcrypt.compare(password, user.password);
+
+        if (!isValidUser) {
+            throw new Error("Invalid email or password")
+        }
+
+        const token = await this.generateToken(user);
+
+        return {
+            token,
+            user: { id: user.id, email: user.email }
         }
     },
 
