@@ -32,4 +32,9 @@ authController.post("/login", async (req: Request<{}, {}, LoginBody>, res: Respo
     }
 });
 
+authController.get("/logout", (req, res) => {
+    res.clearCookie(process.env.AUTH_COOKIE_NAME as string);
+    res.status(200).json({ message: 'Logged out successfully' });
+})
+
 export default authController;
