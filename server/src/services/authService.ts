@@ -1,5 +1,5 @@
-import { User } from "../generated/prisma/client.js"
-import { prisma } from "../src/prisma.js"
+import { User } from "../../generated/prisma/client.js"
+import { prisma } from "../prisma.js"
 import bcrypt from 'bcrypt'
 import jsonwebtoken from 'jsonwebtoken'
 
