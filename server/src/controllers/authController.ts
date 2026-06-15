@@ -1,10 +1,11 @@
 import { Router, Request, Response } from "express";
 import { LoginBody, RegisterBody } from "../interfaces/auth.js";
 import { authService } from "../services/authService.js";
+import { isAuth, isGuest } from "../middlewares/authMiddleware.js";
 
 const authController = Router();
 
-authController.post("/register", async (req: Request<{}, {}, RegisterBody>, res: Response) => {
+authController.post("/register", isGuest, async (req: Request<{}, {}, RegisterBody>, res: Response) => {
     const { username, email, password, rePassword } = req.body;
 
     try {
@@ -18,7 +19,7 @@ authController.post("/register", async (req: Request<{}, {}, RegisterBody>, res:
     }
 });
 
-authController.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response) => {
+authController.post("/login", isGuest, async (req: Request<{}, {}, LoginBody>, res: Response) => {
     const { email, password } = req.body;
 
     try {
@@ -32,7 +33,7 @@ authController.post("/login", async (req: Request<{}, {}, LoginBody>, res: Respo
     }
 });
 
-authController.get("/logout", (req, res) => {
+authController.get("/logout", isAuth, (req, res) => {
     res.clearCookie(process.env.AUTH_COOKIE_NAME as string);
     res.status(200).json({ message: 'Logged out successfully' });
 })

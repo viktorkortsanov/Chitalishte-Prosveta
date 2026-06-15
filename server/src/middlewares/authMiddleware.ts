@@ -29,3 +29,19 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         res.clearCookie(process.env.AUTH_COOKIE_NAME as string);
     }
 }
+
+export const isAuth = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+        return res.json({ message: "User is not authenticated" });
+    }
+
+    next();
+}
+
+export const isGuest = (req: Request, res: Response, next: NextFunction) => {
+    if (req.user) {
+        return res.json({ message: "User is authenticated" });
+    }
+
+    next();
+}
