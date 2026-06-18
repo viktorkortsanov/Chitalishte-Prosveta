@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
+import { authService } from "../../services/authService";
 import "./AuthForms.css";
 
 interface RegisterFormData {
@@ -16,6 +18,7 @@ interface RegisterErrors {
 }
 
 export default function RegisterForm() {
+    const navigate = useNavigate();
     const [form, setForm] = useState<RegisterFormData>({
         username: "",
         email: "",
@@ -23,6 +26,8 @@ export default function RegisterForm() {
         confirmPassword: "",
     });
     const [errors, setErrors] = useState<RegisterErrors>({});
+    const [serverError, setServerError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     function validate(): boolean {
         const newErrors: RegisterErrors = {};
@@ -47,10 +52,25 @@ export default function RegisterForm() {
         return Object.keys(newErrors).length === 0;
     }
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        setServerError("");
         if (!validate()) return;
-        console.log("Register:", form);
+
+        setSubmitting(true);
+        try {
+            await authService.register({
+                username: form.username,
+                email: form.email,
+                password: form.password,
+                rePassword: form.confirmPassword,
+            });
+            navigate("/");
+        } catch (err) {
+            setServerError(err instanceof Error ? err.message : "Грешка от сървъра.");
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -133,7 +153,7 @@ export default function RegisterForm() {
                     </label>
                     <input
                         id="reg-confirm"
-                        name="rePassword"
+                        name="confirmPassword"
                         type="password"
                         className={`auth-field__input${errors.confirmPassword ? " is-error" : ""}`}
                         placeholder="••••••••"
@@ -146,8 +166,10 @@ export default function RegisterForm() {
                     )}
                 </div>
 
-                <button type="submit" className="auth-btn">
-                    Регистрация
+                {serverError && <p className="auth-form__error">{serverError}</p>}
+
+                <button type="submit" className="auth-btn" disabled={submitting}>
+                    {submitting ? "Регистрация..." : "Регистрация"}
                 </button>
             </form>
 

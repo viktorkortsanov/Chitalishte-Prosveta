@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
+import { authService } from "../../services/authService";
 import "./AuthForms.css";
 
 interface LoginFormData {
@@ -12,8 +14,11 @@ interface LoginErrors {
 }
 
 export default function LoginForm() {
+    const navigate = useNavigate();
     const [form, setForm] = useState<LoginFormData>({ email: "", password: "" });
     const [errors, setErrors] = useState<LoginErrors>({});
+    const [serverError, setServerError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     function validate(): boolean {
         const newErrors: LoginErrors = {};
@@ -25,10 +30,20 @@ export default function LoginForm() {
         return Object.keys(newErrors).length === 0;
     }
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        setServerError("");
         if (!validate()) return;
-        console.log("Login:", form);
+
+        setSubmitting(true);
+        try {
+            await authService.login(form);
+            navigate("/");
+        } catch (err) {
+            setServerError(err instanceof Error ? err.message : "Грешка от сървъра.");
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -84,8 +99,10 @@ export default function LoginForm() {
                     )}
                 </div>
 
-                <button type="submit" className="auth-btn">
-                    Вход
+                {serverError && <p className="auth-form__error">{serverError}</p>}
+
+                <button type="submit" className="auth-btn" disabled={submitting}>
+                    {submitting ? "Влизане..." : "Вход"}
                 </button>
             </form>
 

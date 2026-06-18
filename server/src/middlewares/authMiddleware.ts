@@ -32,7 +32,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
 export const isAuth = (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-        return res.json({ message: "User is not authenticated" });
+        return res.status(401).json({ message: "User is not authenticated" });
     }
 
     next();
@@ -40,7 +40,7 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
 
 export const isGuest = (req: Request, res: Response, next: NextFunction) => {
     if (req.user) {
-        return res.json({ message: "User is authenticated" });
+        return res.status(403).json({ message: "User is already authenticated" });
     }
 
     next();

@@ -32,7 +32,7 @@ export const authService = {
         const token = await this.generateToken(newUser);
         return {
             token,
-            user: { id: newUser.id, email: newUser.email }
+            user: { id: newUser.id, username: newUser.username, email: newUser.email }
         }
     },
 
@@ -56,7 +56,7 @@ export const authService = {
 
         return {
             token,
-            user: { id: user.id, email: user.email }
+            user: { id: user.id, username: user.username, email: user.email }
         }
     },
 
