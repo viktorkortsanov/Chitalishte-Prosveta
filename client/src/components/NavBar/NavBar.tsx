@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
+import { authService, type AuthUser } from "../../services/authService";
 import "./NavBar.css";
 import logoSrc from "../../assets/images/prosveta-logo.png";
 
@@ -14,7 +16,10 @@ const NAV_LINKS = [
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [user, setUser] = useState<AuthUser | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
@@ -25,6 +30,23 @@ export default function NavBar() {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    useEffect(() => {
+        authService
+            .getCurrentUser()
+            .then(({ user }) => setUser(user))
+            .catch(() => setUser(null));
+    }, [location.pathname]);
+
+    async function handleLogout() {
+        setDropdownOpen(false);
+        try {
+            await authService.logout();
+        } finally {
+            setUser(null);
+            navigate("/");
+        }
+    }
 
     return (
         <header className="navbar">
@@ -70,23 +92,44 @@ export default function NavBar() {
 
                     {dropdownOpen && (
                         <div className="navbar__dropdown" role="menu">
-                            <a href="/login" className="navbar__dropdown-item" role="menuitem">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                                    <polyline points="10 17 15 12 10 7" />
-                                    <line x1="15" y1="12" x2="3" y2="12" />
-                                </svg>
-                                Вход
-                            </a>
-                            <a href="/register" className="navbar__dropdown-item" role="menuitem">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                    <circle cx="12" cy="7" r="4" />
-                                    <line x1="19" y1="8" x2="19" y2="14" />
-                                    <line x1="22" y1="11" x2="16" y2="11" />
-                                </svg>
-                                Регистрация
-                            </a>
+                            {user ? (
+                                <>
+                                    <span className="navbar__dropdown-user">{user.username}</span>
+                                    <button
+                                        type="button"
+                                        className="navbar__dropdown-item navbar__dropdown-item--button"
+                                        role="menuitem"
+                                        onClick={handleLogout}
+                                    >
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                            <polyline points="16 17 21 12 16 7" />
+                                            <line x1="21" y1="12" x2="9" y2="12" />
+                                        </svg>
+                                        Изход
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <a href="/login" className="navbar__dropdown-item" role="menuitem">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                                            <polyline points="10 17 15 12 10 7" />
+                                            <line x1="15" y1="12" x2="3" y2="12" />
+                                        </svg>
+                                        Вход
+                                    </a>
+                                    <a href="/register" className="navbar__dropdown-item" role="menuitem">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                            <line x1="19" y1="8" x2="19" y2="14" />
+                                            <line x1="22" y1="11" x2="16" y2="11" />
+                                        </svg>
+                                        Регистрация
+                                    </a>
+                                </>
+                            )}
                         </div>
                     )}
                 </div>
@@ -116,8 +159,23 @@ export default function NavBar() {
                         </a>
                     ))}
                     <div className="navbar__mobile-divider" />
-                    <a href="/login" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Вход</a>
-                    <a href="/register" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Регистрация</a>
+                    {user ? (
+                        <button
+                            type="button"
+                            className="navbar__mobile-link navbar__mobile-link--button"
+                            onClick={() => {
+                                setMenuOpen(false);
+                                handleLogout();
+                            }}
+                        >
+                            Изход
+                        </button>
+                    ) : (
+                        <>
+                            <a href="/login" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Вход</a>
+                            <a href="/register" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Регистрация</a>
+                        </>
+                    )}
                 </nav>
             )}
         </header>

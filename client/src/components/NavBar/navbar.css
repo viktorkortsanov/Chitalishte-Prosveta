@@ -160,6 +160,22 @@
     color: var(--c-accent);
 }
 
+.navbar__dropdown-item--button {
+    width: 100%;
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.navbar__dropdown-user {
+    padding: 8px 12px 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-text-muted);
+}
+
 .navbar__hamburger {
     display: none;
     flex-direction: column;
@@ -218,6 +234,15 @@
 .navbar__mobile-link:hover {
     color: var(--c-accent);
     background: var(--c-surface);
+}
+
+.navbar__mobile-link--button {
+    width: 100%;
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
 }
 
 .navbar__mobile-divider {
