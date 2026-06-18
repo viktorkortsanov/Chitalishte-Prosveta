@@ -11,7 +11,7 @@ authController.post("/register", isGuest, async (req: Request<{}, {}, RegisterBo
     try {
         const { token, user } = await authService.register(username, email, password, rePassword);
         res.cookie(process.env.AUTH_COOKIE_NAME as string, token, { httpOnly: true });
-        res.status(200).json({ user: { id: user.id, username: user.username, email: user.email } });
+        res.status(200).json({ user: { id: user.id, username: user.username, email: user.email, isAdmin: user.isAdmin } });
     }
     catch (err) {
         const message = err instanceof Error ? err.message : "An unexpected error occurred";
@@ -25,7 +25,7 @@ authController.post("/login", isGuest, async (req: Request<{}, {}, LoginBody>, r
     try {
         const { token, user } = await authService.login(email, password);
         res.cookie(process.env.AUTH_COOKIE_NAME as string, token, { httpOnly: true });
-        res.status(200).json({ user: { id: user.id, username: user.username, email: user.email } });
+        res.status(200).json({ user: { id: user.id, username: user.username, email: user.email, isAdmin: user.isAdmin } });
     }
     catch (err) {
         const message = err instanceof Error ? err.message : "An unexpected error occurred";
@@ -39,8 +39,8 @@ authController.get("/logout", isAuth, (req, res) => {
 })
 
 authController.get("/me", isAuth, (req: Request, res: Response) => {
-    const { id, username, email } = req.user as { id: string; username: string; email: string };
-    res.status(200).json({ user: { id, username, email } });
+    const { id, username, email, isAdmin } = req.user as { id: string; username: string; email: string; isAdmin: boolean };
+    res.status(200).json({ user: { id, username, email, isAdmin } });
 })
 
 export default authController;

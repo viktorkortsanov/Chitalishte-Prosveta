@@ -95,6 +95,14 @@ export default function NavBar() {
                             {user ? (
                                 <>
                                     <span className="navbar__dropdown-user">{user.username}</span>
+                                    {user.isAdmin && (
+                                        <a href="/admin" className="navbar__dropdown-item" role="menuitem">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                <path d="M12 2 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-4Z" />
+                                            </svg>
+                                            Админ панел
+                                        </a>
+                                    )}
                                     <button
                                         type="button"
                                         className="navbar__dropdown-item navbar__dropdown-item--button"
@@ -160,16 +168,23 @@ export default function NavBar() {
                     ))}
                     <div className="navbar__mobile-divider" />
                     {user ? (
-                        <button
-                            type="button"
-                            className="navbar__mobile-link navbar__mobile-link--button"
-                            onClick={() => {
-                                setMenuOpen(false);
-                                handleLogout();
-                            }}
-                        >
-                            Изход
-                        </button>
+                        <>
+                            {user.isAdmin && (
+                                <a href="/admin" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>
+                                    Админ панел
+                                </a>
+                            )}
+                            <button
+                                type="button"
+                                className="navbar__mobile-link navbar__mobile-link--button"
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    handleLogout();
+                                }}
+                            >
+                                Изход
+                            </button>
+                        </>
                     ) : (
                         <>
                             <a href="/login" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Вход</a>

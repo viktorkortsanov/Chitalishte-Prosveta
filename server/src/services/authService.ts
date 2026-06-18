@@ -32,7 +32,7 @@ export const authService = {
         const token = await this.generateToken(newUser);
         return {
             token,
-            user: { id: newUser.id, username: newUser.username, email: newUser.email }
+            user: { id: newUser.id, username: newUser.username, email: newUser.email, isAdmin: newUser.isAdmin }
         }
     },
 
@@ -56,7 +56,7 @@ export const authService = {
 
         return {
             token,
-            user: { id: user.id, username: user.username, email: user.email }
+            user: { id: user.id, username: user.username, email: user.email, isAdmin: user.isAdmin }
         }
     },
 
@@ -65,6 +65,7 @@ export const authService = {
             id: user.id,
             username: user.username,
             email: user.email,
+            isAdmin: user.isAdmin,
         };
 
         const token = jsonwebtoken.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '7d' });
