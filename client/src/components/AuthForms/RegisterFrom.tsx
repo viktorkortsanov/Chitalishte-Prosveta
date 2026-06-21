@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { authService } from "../../services/authService";
 import "./AuthForms.css";
 
@@ -18,7 +17,6 @@ interface RegisterErrors {
 }
 
 export default function RegisterForm() {
-    const navigate = useNavigate();
     const [form, setForm] = useState<RegisterFormData>({
         username: "",
         email: "",
@@ -27,6 +25,7 @@ export default function RegisterForm() {
     });
     const [errors, setErrors] = useState<RegisterErrors>({});
     const [serverError, setServerError] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
     function validate(): boolean {
@@ -55,17 +54,18 @@ export default function RegisterForm() {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setServerError("");
+        setSuccessMessage("");
         if (!validate()) return;
 
         setSubmitting(true);
         try {
-            await authService.register({
+            const res = await authService.register({
                 username: form.username,
                 email: form.email,
                 password: form.password,
                 rePassword: form.confirmPassword,
             });
-            navigate("/");
+            setSuccessMessage(res.message);
         } catch (err) {
             setServerError(err instanceof Error ? err.message : "Грешка от сървъра.");
         } finally {
@@ -167,6 +167,7 @@ export default function RegisterForm() {
                 </div>
 
                 {serverError && <p className="auth-form__error">{serverError}</p>}
+                {successMessage && <p className="auth-card__sub">{successMessage}</p>}
 
                 <button type="submit" className="auth-btn" disabled={submitting}>
                     {submitting ? "Регистрация..." : "Регистрация"}

@@ -47,10 +47,17 @@ export const authService = {
         });
     },
 
-    register(payload: RegisterPayload): Promise<AuthResponse> {
+    register(payload: RegisterPayload): Promise<{ message: string }> {
         return request("/register", {
             method: "POST",
             body: JSON.stringify(payload),
+        });
+    },
+
+    verifyEmail(token: string): Promise<{ message: string }> {
+        return request("/verify-email", {
+            method: "POST",
+            body: JSON.stringify({ token }),
         });
     },
 

@@ -1,7 +1,11 @@
+import crypto from 'crypto'
 import { User } from "../../generated/prisma/client.js"
 import { prisma } from "../prisma.js"
 import bcrypt from 'bcrypt'
 import jsonwebtoken from 'jsonwebtoken'
+import { emailService } from "./emailService.js"
+
+const VERIFICATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
 
 export const authService = {
     async register(username: string, email: string, password: string, rePassword: string) {
@@ -20,19 +24,22 @@ export const authService = {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        const verificationToken = crypto.randomBytes(32).toString('hex');
 
         const newUser = await prisma.user.create({
             data: {
                 username,
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                verificationToken,
+                verificationTokenExpiresAt: new Date(Date.now() + VERIFICATION_TOKEN_TTL_MS),
             }
         });
 
-        const token = await this.generateToken(newUser);
+        await emailService.sendVerificationEmail(newUser.email, verificationToken);
+
         return {
-            token,
-            user: { id: newUser.id, username: newUser.username, email: newUser.email, isAdmin: newUser.isAdmin }
+            message: "Регистрацията е успешна. Моля, проверете имейла си, за да потвърдите акаунта си."
         }
     },
 
@@ -52,12 +59,37 @@ export const authService = {
             throw new Error("Invalid email or password")
         }
 
+        if (!user.emailVerified) {
+            throw new Error("Моля, потвърдете имейла си преди да влезете.")
+        }
+
         const token = await this.generateToken(user);
 
         return {
             token,
             user: { id: user.id, username: user.username, email: user.email, isAdmin: user.isAdmin }
         }
+    },
+
+    async verifyEmail(token: string) {
+        const user = await prisma.user.findUnique({
+            where: { verificationToken: token }
+        });
+
+        if (!user || !user.verificationTokenExpiresAt || user.verificationTokenExpiresAt < new Date()) {
+            throw new Error("Линкът за потвърждение е невалиден или изтекъл.");
+        }
+
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                emailVerified: true,
+                verificationToken: null,
+                verificationTokenExpiresAt: null,
+            }
+        });
+
+        return { message: "Имейлът е потвърден успешно. Вече можете да влезете." };
     },
 
     async generateToken(user: User) {
