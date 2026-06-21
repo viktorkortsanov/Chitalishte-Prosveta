@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router";
 import { authService } from "../../services/authService";
 import "./AuthForms.css";
 
@@ -177,9 +178,9 @@ export default function RegisterForm() {
             <div className="auth-divider"><span>или</span></div>
             <p className="auth-link-row">
                 Вече имате акаунт?{" "}
-                <a href="/login" className="auth-link">
+                <Link to="/login" className="auth-link">
                     Влезте
-                </a>
+                </Link>
             </p>
         </div>
     );

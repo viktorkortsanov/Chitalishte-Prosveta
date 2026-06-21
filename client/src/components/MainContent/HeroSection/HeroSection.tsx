@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import "./HeroSection.css";
 
 export default function HeroSection() {
@@ -13,12 +14,12 @@ export default function HeroSection() {
                     Пазим традициите, обогатяваме бъдещето. Заповядайте на нашите
                     събития и дейности.
                 </p>
-                <a href="/deynosti" className="hero__btn">
+                <Link to="/sabitiya" className="hero__btn">
                     Разгледайте събитията
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
-                </a>
+                </Link>
             </div>
             <div className="hero__accent" />
         </section>

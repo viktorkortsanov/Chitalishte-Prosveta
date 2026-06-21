@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { authService, type AuthUser } from "../../services/authService";
 import "./NavBar.css";
 import logoSrc from "../../assets/images/prosveta-logo.png";
@@ -7,6 +7,7 @@ import logoSrc from "../../assets/images/prosveta-logo.png";
 const NAV_LINKS = [
     { label: "Начало", href: "/" },
     { label: "За нас", href: "/za-nas" },
+    { label: "Събития", href: "/sаbitiya" },
     { label: "Новини", href: "/novini" },
     { label: "Дейности", href: "/deynosti" },
     { label: "Галерия", href: "/galeriya" },
@@ -53,7 +54,7 @@ export default function NavBar() {
             <div className="navbar__accent" />
             <div className="navbar__inner">
 
-                <a href="/" className="navbar__logo" aria-label="Начална страница">
+                <Link to="/" className="navbar__logo" aria-label="Начална страница">
                     <div className="navbar__logo-img-wrap">
                         <img
                             src={logoSrc}
@@ -65,13 +66,13 @@ export default function NavBar() {
                         <span className="navbar__logo-title">НЧ „Просвета — 1870"</span>
                         <span className="navbar__logo-sub">Свиленград</span>
                     </div>
-                </a>
+                </Link>
 
                 <nav className="navbar__links" aria-label="Главна навигация">
                     {NAV_LINKS.map((link) => (
-                        <a key={link.href} href={link.href} className="navbar__link">
+                        <Link key={link.href} to={link.href} className="navbar__link">
                             {link.label}
-                        </a>
+                        </Link>
                     ))}
                 </nav>
 
@@ -96,12 +97,12 @@ export default function NavBar() {
                                 <>
                                     <span className="navbar__dropdown-user">{user.username}</span>
                                     {user.isAdmin && (
-                                        <a href="/admin" className="navbar__dropdown-item" role="menuitem">
+                                        <Link to="/admin" className="navbar__dropdown-item" role="menuitem">
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                                 <path d="M12 2 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-4Z" />
                                             </svg>
                                             Админ панел
-                                        </a>
+                                        </Link>
                                     )}
                                     <button
                                         type="button"
@@ -119,15 +120,15 @@ export default function NavBar() {
                                 </>
                             ) : (
                                 <>
-                                    <a href="/login" className="navbar__dropdown-item" role="menuitem">
+                                    <Link to="/login" className="navbar__dropdown-item" role="menuitem">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
                                             <polyline points="10 17 15 12 10 7" />
                                             <line x1="15" y1="12" x2="3" y2="12" />
                                         </svg>
                                         Вход
-                                    </a>
-                                    <a href="/register" className="navbar__dropdown-item" role="menuitem">
+                                    </Link>
+                                    <Link to="/register" className="navbar__dropdown-item" role="menuitem">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                             <circle cx="12" cy="7" r="4" />
@@ -135,7 +136,7 @@ export default function NavBar() {
                                             <line x1="22" y1="11" x2="16" y2="11" />
                                         </svg>
                                         Регистрация
-                                    </a>
+                                    </Link>
                                 </>
                             )}
                         </div>
@@ -157,22 +158,22 @@ export default function NavBar() {
             {menuOpen && (
                 <nav className="navbar__mobile" aria-label="Мобилна навигация">
                     {NAV_LINKS.map((link) => (
-                        <a
+                        <Link
                             key={link.href}
-                            href={link.href}
+                            to={link.href}
                             className="navbar__mobile-link"
                             onClick={() => setMenuOpen(false)}
                         >
                             {link.label}
-                        </a>
+                        </Link>
                     ))}
                     <div className="navbar__mobile-divider" />
                     {user ? (
                         <>
                             {user.isAdmin && (
-                                <a href="/admin" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>
+                                <Link to="/admin" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>
                                     Админ панел
-                                </a>
+                                </Link>
                             )}
                             <button
                                 type="button"
@@ -187,8 +188,8 @@ export default function NavBar() {
                         </>
                     ) : (
                         <>
-                            <a href="/login" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Вход</a>
-                            <a href="/register" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Регистрация</a>
+                            <Link to="/login" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Вход</Link>
+                            <Link to="/register" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Регистрация</Link>
                         </>
                     )}
                 </nav>

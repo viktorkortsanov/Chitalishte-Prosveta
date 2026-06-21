@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { authService } from "../../services/authService";
 import "./AuthForms.css";
 
@@ -42,9 +42,9 @@ export default function VerifyEmail() {
                 <>
                     <p className="auth-card__sub">{message}</p>
                     <p className="auth-link-row">
-                        <a href="/login" className="auth-link">
+                        <Link to="/login" className="auth-link">
                             Към вход
-                        </a>
+                        </Link>
                     </p>
                 </>
             )}

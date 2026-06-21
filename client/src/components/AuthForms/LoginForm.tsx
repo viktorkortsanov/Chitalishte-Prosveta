@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { authService } from "../../services/authService";
 import "./AuthForms.css";
 
@@ -109,9 +109,9 @@ export default function LoginForm() {
             <div className="auth-divider"><span>или</span></div>
             <p className="auth-link-row">
                 Нямате акаунт?{" "}
-                <a href="/register" className="auth-link">
+                <Link to="/register" className="auth-link">
                     Регистрирайте се
-                </a>
+                </Link>
             </p>
         </div>
     );

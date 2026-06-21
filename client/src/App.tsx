@@ -9,8 +9,8 @@ function App() {
   return (
     <>
       <NavBar />
-      <MainContent />
       <Routes>
+        <Route path="/" element={<MainContent />}></Route>
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
