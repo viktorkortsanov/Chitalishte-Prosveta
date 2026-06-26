@@ -1,4 +1,5 @@
 import AboutUsSection from "./AboutUsSection/AboutUsSection";
+import ActivitySection from "./ActivitySection/ActivitySection";
 import HeroSection from "./HeroSection/HeroSection";
 import NewsSection from "./NewsSection/NewsSection";
 
@@ -8,6 +9,7 @@ export default function MainContent() {
             <HeroSection />
             <AboutUsSection />
             <NewsSection />
+            <ActivitySection />
         </main>
     )
 }

@@ -1,0 +1,133 @@
+.activity {
+    padding: 80px 24px;
+    background: var(--c-bg);
+}
+
+.activity__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.activity__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.activity__label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-accent);
+}
+
+.activity__accent {
+    width: 48px;
+    height: 3px;
+    background: var(--c-accent);
+    border-radius: 2px;
+}
+
+.activity__title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--c-text);
+    line-height: 1.3;
+}
+
+.activity__sub {
+    font-size: 15px;
+    color: var(--c-text-muted);
+    max-width: 560px;
+    line-height: 1.75;
+}
+
+.activity__photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.activity__photo-wrap {
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--c-surface);
+    border: 1.5px dashed var(--c-border);
+}
+
+.activity__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+}
+
+.activity__photo-wrap:hover .activity__photo {
+    transform: scale(1.04);
+}
+
+.activity__footer {
+    display: flex;
+    justify-content: center;
+}
+
+.activity__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: var(--c-accent);
+    color: var(--c-text);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+.activity__btn:hover {
+    opacity: 0.9;
+}
+
+.activity__btn:active {
+    transform: scale(0.98);
+}
+
+.activity__btn svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .activity {
+        padding: 56px 20px;
+    }
+
+    .activity__title {
+        font-size: 24px;
+    }
+
+    .activity__photos {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 400px) {
+    .activity__title {
+        font-size: 20px;
+    }
+
+    .activity__sub {
+        font-size: 14px;
+    }
+}
