@@ -1,5 +1,6 @@
 import "./AboutUsSection.css";
 import imgSrc from "../../../assets/images/about-us-section.jpg"
+import { Link } from "react-router";
 
 export default function AboutUsSection() {
     return (
@@ -18,12 +19,12 @@ export default function AboutUsSection() {
                         са художествен барометър на творческия ни живот и свидетелство за
                         неугасващата любов към културата и изкуството.
                     </p>
-                    <a href="/za-nas" className="about__btn">
+                    <Link to="/za-nas" className="about__btn">
                         Научи още
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
-                    </a>
+                    </Link>
                 </div>
 
                 <div className="about__image-wrap">
