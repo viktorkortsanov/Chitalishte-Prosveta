@@ -4,6 +4,7 @@ import VerifyEmail from "./components/AuthForms/VerifyEmail"
 import NavBar from "./components/NavBar/NavBar"
 import MainContent from "./components/MainContent/MainContent"
 import { Routes, Route } from "react-router"
+import Footer from "./components/Footer/Footer"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes >
+      <Footer />
     </>
   )
 }
