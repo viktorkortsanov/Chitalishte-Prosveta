@@ -64,7 +64,7 @@ export default function NewsSection({ news = PLACEHOLDER_NEWS }: NewsSectionProp
             </div>
 
             <div className="news__footer">
-                <Link to="/novini" className="news__btn">
+                <Link to="/novini-i-sabitiya" className="news__btn">
                     Всички новини
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M5 12h14M12 5l7 7-7 7" />

@@ -7,8 +7,7 @@ import logoSrc from "../../assets/images/prosveta-logo.png";
 const NAV_LINKS = [
     { label: "Начало", href: "/" },
     { label: "За нас", href: "/za-nas" },
-    { label: "Събития", href: "/sаbitiya" },
-    { label: "Новини", href: "/novini" },
+    { label: "Новини и Събития", href: "/novini-i-sаbitiya" },
     { label: "Дейности", href: "/deynosti" },
     { label: "Галерия", href: "/galeriya" },
     { label: "Контакти", href: "/kontakti" },
