@@ -25,3 +25,13 @@ model User {
 
   @@map("users")
 }
+
+model News {
+  id        String   @id @default(uuid())
+  title     String
+  imageUrl  String?
+  text      String
+  createdAd DateTime @default(now())
+
+  @@map("news")
+}
