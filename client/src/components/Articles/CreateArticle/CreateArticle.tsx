@@ -86,6 +86,13 @@ export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
         e.preventDefault();
         if (!validate()) return;
         onSubmit(form);
+
+        try {
+
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     return (
