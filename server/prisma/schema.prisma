@@ -26,12 +26,12 @@ model User {
   @@map("users")
 }
 
-model News {
+model Article {
   id        String   @id @default(uuid())
   title     String
   imageUrl  String?
   text      String
   createdAd DateTime @default(now())
 
-  @@map("news")
+  @@map("articles")
 }

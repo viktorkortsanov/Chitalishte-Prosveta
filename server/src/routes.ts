@@ -1,10 +1,10 @@
 import { Router } from "express";
 import authController from "./controllers/authController.js";
-import newsController from "./controllers/newsController.js";
+import articleController from "./controllers/articleController.js";
 
 const routes = Router();
 
 routes.use(authController);
-routes.use(newsController);
+routes.use(articleController);
 
 export default routes;

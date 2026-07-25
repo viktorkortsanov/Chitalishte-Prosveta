@@ -1,4 +1,4 @@
-export interface NewsBody {
+export interface ArticleBody {
     title: string,
     imageUrl?: string,
     text: string
