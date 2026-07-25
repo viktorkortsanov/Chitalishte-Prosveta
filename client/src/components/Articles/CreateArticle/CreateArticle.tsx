@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import "./CreateArticle.css";
+import { articleService } from "../../../services/articleService";
+import { uploadService } from "../../../services/uploadService";
 
 type Category = "news" | "event";
 
@@ -18,7 +20,7 @@ interface ArticleFormErrors {
 
 interface ArticleFormProps {
     onClose: () => void;
-    onSubmit: (data: ArticleFormData) => void;
+    onSubmit: () => void;
 }
 
 export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
@@ -31,6 +33,8 @@ export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
     const [errors, setErrors] = useState<ArticleFormErrors>({});
     const [preview, setPreview] = useState<string | null>(null);
     const [dragging, setDragging] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [serverError, setServerError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     function validate(): boolean {
@@ -82,16 +86,29 @@ export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
         if (inputRef.current) inputRef.current.value = "";
     }
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (!validate()) return;
-        onSubmit(form);
+
+        setSubmitting(true);
+        setServerError(null);
 
         try {
-
+            const imageUrl = form.image ? await uploadService.uploadImage(form.image) : undefined;
+            await articleService.create({
+                title: form.title,
+                category: form.category,
+                text: form.text,
+                imageUrl,
+            });
+            onSubmit();
+            onClose();
         }
         catch (err) {
-            console.log(err);
+            setServerError(err instanceof Error ? err.message : "Грешка от сървъра.");
+        }
+        finally {
+            setSubmitting(false);
         }
     }
 
@@ -215,13 +232,15 @@ export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
                         {errors.text && <span className="article-field__error">{errors.text}</span>}
                     </div>
 
+                    {serverError && <p className="article-form__error">{serverError}</p>}
+
                     <div className="article-form__footer">
-                        <button type="submit" className="article-form__submit">
+                        <button type="submit" className="article-form__submit" disabled={submitting}>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                 <path d="M22 2L11 13" />
                                 <path d="M22 2L15 22 11 13 2 9l20-7z" />
                             </svg>
-                            Публикувай
+                            {submitting ? "Публикуване..." : "Публикувай"}
                         </button>
                     </div>
                 </form>
