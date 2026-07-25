@@ -1,10 +1,12 @@
 import { prisma } from "../prisma.js"
+import { ArticleCategory } from "../../generated/prisma/client.js";
 import { ArticleBody } from "../interfaces/article.js";
 
 export const articleService = {
-    create(title: string, imageUrl: string, text: string) {
+    create(category: ArticleCategory, title: string, imageUrl: string, text: string) {
         return prisma.article.create({
             data: {
+                category,
                 title,
                 imageUrl,
                 text
@@ -24,6 +26,7 @@ export const articleService = {
         return prisma.article.update({
             where: { id: articleId },
             data: {
+                category: articleData.category,
                 title: articleData.title,
                 imageUrl: articleData.imageUrl,
                 text: articleData.text

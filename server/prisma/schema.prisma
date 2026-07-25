@@ -26,12 +26,18 @@ model User {
   @@map("users")
 }
 
+enum ArticleCategory {
+  news
+  event
+}
+
 model Article {
-  id        String   @id @default(uuid())
+  id        String          @id @default(uuid())
+  category  ArticleCategory
   title     String
   imageUrl  String?
   text      String
-  createdAd DateTime @default(now())
+  createdAd DateTime        @default(now())
 
   @@map("articles")
 }

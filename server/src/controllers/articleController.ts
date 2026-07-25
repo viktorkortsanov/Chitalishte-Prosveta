@@ -16,10 +16,10 @@ function handleError(err: unknown, res: Response) {
 }
 
 articleController.post("/novini-i-sabitiya", async (req: Request<{}, {}, ArticleBody>, res: Response) => {
-    const { title, imageUrl, text } = req.body;
+    const { category, title, imageUrl, text } = req.body;
 
     try {
-        await articleService.create(title, imageUrl ?? "", text);
+        await articleService.create(category, title, imageUrl ?? "", text);
         res.status(204).send();
     }
     catch (err) {
