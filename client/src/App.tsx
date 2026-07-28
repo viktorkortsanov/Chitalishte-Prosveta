@@ -18,7 +18,7 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/novini-i-sаbitiya" element={<ArticleForm onClose={() => navigate(-1)} onSubmit={() => {}} />} />
+        <Route path="/novini-i-sabitiya" element={<ArticleForm onClose={() => navigate(-1)} onSubmit={() => { }} />} />
       </Routes>
       <Footer />
     </>
