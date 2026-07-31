@@ -25,5 +25,13 @@ export const articleService = {
     },
     getAll() {
         return request<Article[]>("/novini-i-sabitiya");
+    },
+    getOne(id: string) {
+        return request<Article>(`/novini-i-sabitiya/${id}`);
+    },
+    delete(id: string) {
+        return request<void>(`/novini-i-sabitiya/${id}`, {
+            method: "DELETE"
+        });
     }
 }
