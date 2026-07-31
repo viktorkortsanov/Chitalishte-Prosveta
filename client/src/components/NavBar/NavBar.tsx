@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
-import { authService, type AuthUser } from "../../services/authService";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
 import "./NavBar.css";
 import logoSrc from "../../assets/images/prosveta-logo.png";
 
@@ -16,9 +16,8 @@ const NAV_LINKS = [
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [user, setUser] = useState<AuthUser | null>(null);
+    const { currentUser: user, logout } = useAuth();
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,19 +30,11 @@ export default function NavBar() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    useEffect(() => {
-        authService
-            .getCurrentUser()
-            .then(({ user }) => setUser(user))
-            .catch(() => setUser(null));
-    }, [location.pathname]);
-
     async function handleLogout() {
         setDropdownOpen(false);
         try {
-            await authService.logout();
+            await logout();
         } finally {
-            setUser(null);
             navigate("/");
         }
     }

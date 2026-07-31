@@ -6,9 +6,13 @@ import MainContent from "./components/MainContent/MainContent"
 import { Routes, Route, useNavigate } from "react-router"
 import Footer from "./components/Footer/Footer"
 import ArticleForm from "./components/Articles/CreateArticle/CreateArticle"
+import ArticlesMain from "./components/Articles/ArticlesMain/ArticlesMain"
+import { AuthProvider } from "./context/AuthContext"
+import { useAuth } from "./hooks/useAuth"
 
-function App() {
+function AppRoutes() {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
 
   return (
     <>
@@ -18,10 +22,19 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/novini-i-sabitiya" element={<ArticleForm onClose={() => navigate(-1)} onSubmit={() => { }} />} />
+        <Route path="/novini-i-sabitiya" element={<ArticlesMain isAdmin={isAdmin} />} />
+        <Route path="/novini-i-sabitiya/create" element={<ArticleForm onClose={() => navigate(-1)} onSubmit={() => { }} />} />
       </Routes>
       <Footer />
     </>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
   )
 }
 

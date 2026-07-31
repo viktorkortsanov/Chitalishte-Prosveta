@@ -22,5 +22,8 @@ export const articleService = {
             method: "POST",
             body: JSON.stringify(articleData)
         });
+    },
+    getAll() {
+        return request<Article[]>("/novini-i-sabitiya");
     }
 }

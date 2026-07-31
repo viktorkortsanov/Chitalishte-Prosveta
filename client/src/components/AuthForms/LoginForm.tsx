@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { authService } from "../../services/authService";
+import { useAuth } from "../../hooks/useAuth";
 import "./AuthForms.css";
 
 interface LoginFormData {
@@ -15,6 +16,7 @@ interface LoginErrors {
 
 export default function LoginForm() {
     const navigate = useNavigate();
+    const { setCurrentUser } = useAuth();
     const [form, setForm] = useState<LoginFormData>({ email: "", password: "" });
     const [errors, setErrors] = useState<LoginErrors>({});
     const [serverError, setServerError] = useState("");
@@ -37,7 +39,8 @@ export default function LoginForm() {
 
         setSubmitting(true);
         try {
-            await authService.login(form);
+            const { user } = await authService.login(form);
+            setCurrentUser(user);
             navigate("/");
         } catch (err) {
             setServerError(err instanceof Error ? err.message : "Грешка от сървъра.");
