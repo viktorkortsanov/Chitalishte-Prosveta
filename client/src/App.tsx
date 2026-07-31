@@ -8,6 +8,7 @@ import Footer from "./components/Footer/Footer"
 import ArticleForm from "./components/Articles/CreateArticle/CreateArticle"
 import ArticlesMain from "./components/Articles/ArticlesMain/ArticlesMain"
 import ArticleDetails from "./components/Articles/ArticleDetails/ArticleDetails"
+import EditArticle from "./components/Articles/EditArticle/EditArticle"
 import { AuthProvider } from "./context/AuthContext"
 import { useAuth } from "./hooks/useAuth"
 
@@ -25,6 +26,7 @@ function AppRoutes() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/novini-i-sabitiya" element={<ArticlesMain isAdmin={isAdmin} />} />
         <Route path="/novini-i-sabitiya/create" element={<ArticleForm onClose={() => navigate(-1)} onSubmit={() => { }} />} />
+        <Route path="/novini-i-sabitiya/:slug/edit" element={<EditArticle />} />
         <Route path="/novini-i-sabitiya/:slug" element={<ArticleDetails />} />
       </Routes>
       <Footer />

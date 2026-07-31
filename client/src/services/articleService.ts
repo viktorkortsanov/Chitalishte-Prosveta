@@ -29,6 +29,12 @@ export const articleService = {
     getOne(id: string) {
         return request<Article>(`/novini-i-sabitiya/${id}`);
     },
+    edit(id: string, articleData: ArticlePayload) {
+        return request<void>(`/novini-i-sabitiya/${id}`, {
+            method: "PATCH",
+            body: JSON.stringify(articleData)
+        });
+    },
     delete(id: string) {
         return request<void>(`/novini-i-sabitiya/${id}`, {
             method: "DELETE"

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import "./ArticleDetails.css";
 import { articleService, type Article } from "../../../services/articleService";
 import { useAuth } from "../../../hooks/useAuth";
+import ConfirmDialog from "../../ConfirmDialog/ConfirmDialog";
 
 const CATEGORY_LABEL: Record<"news" | "event", string> = {
     news: "Новина",
@@ -20,6 +21,7 @@ export default function ArticleDetails() {
     const [article, setArticle] = useState<Article | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     useEffect(() => {
         if (!slug) return;
@@ -37,6 +39,7 @@ export default function ArticleDetails() {
 
     async function handleDelete() {
         if (!article) return;
+        setConfirmOpen(false);
         await articleService.delete(article.id);
         navigate("/novini-i-sabitiya");
     }
@@ -127,7 +130,7 @@ export default function ArticleDetails() {
                                 </svg>
                                 Редактирай
                             </button>
-                            <button className="article-details__btn-delete" onClick={handleDelete}>
+                            <button className="article-details__btn-delete" onClick={() => setConfirmOpen(true)}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <polyline points="3 6 5 6 21 6" />
                                     <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
@@ -140,6 +143,14 @@ export default function ArticleDetails() {
                     )}
                 </article>
             </div>
+
+            <ConfirmDialog
+                open={confirmOpen}
+                title="Изтриване на статия"
+                message={`Сигурни ли сте, че искате да изтриете „${article.title}"? Това действие не може да бъде отменено.`}
+                onConfirm={handleDelete}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }
