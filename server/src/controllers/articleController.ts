@@ -29,8 +29,19 @@ articleController.post("/novini-i-sabitiya", async (req: Request<{}, {}, Article
 
 articleController.get("/novini-i-sabitiya", async (req: Request, res: Response) => {
     try {
-        const articles = await articleService.getAll();
-        res.status(200).json(articles);
+        const { category, search, page, limit } = req.query;
+        const parsedCategory = category === "news" || category === "event" ? category : undefined;
+        const parsedSearch = typeof search === "string" && search.trim() ? search.trim() : undefined;
+        const parsedLimit = typeof limit === "string" && Number(limit) > 0 ? Math.floor(Number(limit)) : undefined;
+        const parsedPage = typeof page === "string" && Number(page) > 0 ? Math.floor(Number(page)) : undefined;
+
+        const result = await articleService.getAll({
+            category: parsedCategory,
+            search: parsedSearch,
+            page: parsedPage,
+            limit: parsedLimit,
+        });
+        res.status(200).json(result);
     }
     catch (err) {
         handleError(err, res);

@@ -1,6 +1,13 @@
 import { prisma } from "../prisma.js"
-import { ArticleCategory } from "../../generated/prisma/client.js";
+import { ArticleCategory, Prisma } from "../../generated/prisma/client.js";
 import { ArticleBody } from "../interfaces/article.js";
+
+export interface GetAllOptions {
+    category?: ArticleCategory;
+    search?: string;
+    page?: number;
+    limit?: number;
+}
 
 export const articleService = {
     create(category: ArticleCategory, title: string, imageUrl: string, text: string) {
@@ -14,8 +21,23 @@ export const articleService = {
         });
     },
 
-    getAll() {
-        return prisma.article.findMany();
+    async getAll({ category, search, page, limit }: GetAllOptions = {}) {
+        const where: Prisma.ArticleWhereInput = {
+            ...(category ? { category } : {}),
+            ...(search ? { title: { contains: search, mode: "insensitive" } } : {}),
+        };
+
+        const [articles, total] = await Promise.all([
+            prisma.article.findMany({
+                where,
+                orderBy: { createdAd: "desc" },
+                ...(limit ? { take: limit } : {}),
+                ...(page && limit ? { skip: (page - 1) * limit } : {}),
+            }),
+            prisma.article.count({ where }),
+        ]);
+
+        return { articles, total };
     },
 
     getOne(articleId: string) {
