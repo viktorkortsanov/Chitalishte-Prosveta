@@ -4,15 +4,7 @@ import "./ArticleDetails.css";
 import { articleService, type Article } from "../../../services/articleService";
 import { useAuth } from "../../../hooks/useAuth";
 import ConfirmDialog from "../../ConfirmDialog/ConfirmDialog";
-
-const CATEGORY_LABEL: Record<"news" | "event", string> = {
-    news: "Новина",
-    event: "Събитие",
-};
-
-function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString("bg-BG", { day: "numeric", month: "long", year: "numeric" });
-}
+import { CATEGORY_LABEL, formatDate } from "../../../utils/article";
 
 export default function ArticleDetails() {
     const { slug } = useParams<{ slug: string }>();

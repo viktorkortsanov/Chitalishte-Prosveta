@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import "./ArticlesMain.css";
 import { articleService, type Article } from "../../../services/articleService";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
+import { CATEGORY_LABEL } from "../../../utils/article";
+import ArticleCard from "../ArticleCard/ArticleCard";
 
 type Category = "all" | "news" | "event";
 
@@ -10,20 +12,7 @@ interface NewsPageProps {
     isAdmin?: boolean;
 }
 
-const CATEGORY_LABEL: Record<"news" | "event", string> = {
-    news: "Новина",
-    event: "Събитие",
-};
-
 const PER_PAGE = 6;
-
-function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString("bg-BG", { day: "numeric", month: "long", year: "numeric" });
-}
-
-function excerptOf(text: string) {
-    return text.length > 140 ? `${text.slice(0, 140).trimEnd()}…` : text;
-}
 
 export default function ArticlesMain({ isAdmin = false }: NewsPageProps) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -150,35 +139,7 @@ export default function ArticlesMain({ isAdmin = false }: NewsPageProps) {
                 ) : (
                     <div className="news-page__grid">
                         {articles.map((article) => (
-                            <article key={article.id} className="news-card">
-                                <div className="news-card__img-wrap">
-                                    {article.imageUrl ? (
-                                        <img src={article.imageUrl} alt={article.title} className="news-card__img" />
-                                    ) : (
-                                        <div className="news-card__img-placeholder">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                                <circle cx="8.5" cy="8.5" r="1.5" />
-                                                <path d="M21 15l-5-5L5 21" />
-                                            </svg>
-                                        </div>
-                                    )}
-                                    <span className={`news-card__badge news-card__badge--${article.category}`}>
-                                        {CATEGORY_LABEL[article.category]}
-                                    </span>
-                                </div>
-                                <div className="news-card__body">
-                                    <span className="news-card__date">{formatDate(article.createdAd)}</span>
-                                    <h3 className="news-card__title">{article.title}</h3>
-                                    <p className="news-card__excerpt">{excerptOf(article.text)}</p>
-                                    <Link to={`/novini-i-sabitiya/${article.id}`} className="news-card__link">
-                                        Прочети повече
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                            <path d="M5 12h14M12 5l7 7-7 7" />
-                                        </svg>
-                                    </Link>
-                                </div>
-                            </article>
+                            <ArticleCard key={article.id} article={article} />
                         ))}
                     </div>
                 )}
