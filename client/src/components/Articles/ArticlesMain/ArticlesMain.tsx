@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import "./ArticlesMain.css";
 import { articleService, type Article } from "../../../services/articleService";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 
 type Category = "all" | "news" | "event";
 
 interface NewsPageProps {
-    articles?: Article[];
     isAdmin?: boolean;
 }
 
@@ -25,38 +25,64 @@ function excerptOf(text: string) {
     return text.length > 140 ? `${text.slice(0, 140).trimEnd()}…` : text;
 }
 
-export default function ArticlesMain({ articles, isAdmin = false }: NewsPageProps) {
-    const [filter, setFilter] = useState<Category>("all");
-    const [page, setPage] = useState(1);
-    const [fetchedArticles, setFetchedArticles] = useState<Article[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export default function ArticlesMain({ isAdmin = false }: NewsPageProps) {
+    const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (articles) {
-            setLoading(false);
-            return;
-        }
+    const categoryParam = searchParams.get("category");
+    const filter: Category = categoryParam === "news" || categoryParam === "event" ? categoryParam : "all";
+    const page = Math.max(1, Number(searchParams.get("page")) || 1);
+    const searchQuery = searchParams.get("search") ?? "";
 
+    const [searchInput, setSearchInput] = useState(searchQuery);
+    const debouncedSearch = useDebouncedValue(searchInput, 400);
+
+    const [articles, setArticles] = useState<Article[]>([]);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const current = searchParams.get("search") ?? "";
+        if (debouncedSearch === current) return;
+
+        const next = new URLSearchParams(searchParams);
+        if (debouncedSearch) next.set("search", debouncedSearch); else next.delete("search");
+        next.set("page", "1");
+        setSearchParams(next, { replace: true });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedSearch]);
+
+    useEffect(() => {
         let cancelled = false;
         setLoading(true);
-        articleService.getAll()
-            .then((data) => { if (!cancelled) setFetchedArticles(data); })
+        setError(null);
+        articleService.getAll({
+            category: filter === "all" ? undefined : filter,
+            search: searchQuery || undefined,
+            page,
+            limit: PER_PAGE,
+        })
+            .then((data) => { if (!cancelled) { setArticles(data.articles); setTotal(data.total); } })
             .catch((err) => { if (!cancelled) setError(err instanceof Error ? err.message : "Грешка от сървъра."); })
             .finally(() => { if (!cancelled) setLoading(false); });
 
         return () => { cancelled = true; };
-    }, [articles]);
+    }, [filter, page, searchQuery]);
 
-    const allArticles = articles ?? fetchedArticles;
-    const filtered = allArticles.filter((a) => filter === "all" || a.category === filter);
-    const totalPages = Math.ceil(filtered.length / PER_PAGE);
-    const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    const totalPages = Math.ceil(total / PER_PAGE);
 
     function handleFilter(cat: Category) {
-        setFilter(cat);
-        setPage(1);
+        const next = new URLSearchParams(searchParams);
+        if (cat === "all") next.delete("category"); else next.set("category", cat);
+        next.set("page", "1");
+        setSearchParams(next);
+    }
+
+    function setPage(p: number) {
+        const next = new URLSearchParams(searchParams);
+        next.set("page", String(p));
+        setSearchParams(next);
     }
 
     return (
@@ -69,6 +95,20 @@ export default function ArticlesMain({ articles, isAdmin = false }: NewsPageProp
                         <h1 className="news-page__title">Новини & Събития</h1>
                     </div>
                     <div className="news-page__actions">
+                        <div className="news-page__search">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                <circle cx="11" cy="11" r="7" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input
+                                type="text"
+                                className="news-page__search-input"
+                                placeholder="Търсене по заглавие..."
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                aria-label="Търсене по заглавие"
+                            />
+                        </div>
                         <div className="news-page__filter">
                             {(["all", "news", "event"] as Category[]).map((cat) => (
                                 <button
@@ -103,13 +143,13 @@ export default function ArticlesMain({ articles, isAdmin = false }: NewsPageProp
                     <div className="news-page__empty">
                         <p>{error}</p>
                     </div>
-                ) : paginated.length === 0 ? (
+                ) : articles.length === 0 ? (
                     <div className="news-page__empty">
-                        <p>Няма намерени статии.</p>
+                        <p>{filter !== "all" || searchQuery ? "Няма намерени статии за избраните критерии." : "Няма намерени статии."}</p>
                     </div>
                 ) : (
                     <div className="news-page__grid">
-                        {paginated.map((article) => (
+                        {articles.map((article) => (
                             <article key={article.id} className="news-card">
                                 <div className="news-card__img-wrap">
                                     {article.imageUrl ? (
@@ -147,7 +187,7 @@ export default function ArticlesMain({ articles, isAdmin = false }: NewsPageProp
                     <div className="news-page__pagination">
                         <button
                             className="news-page__pag-btn"
-                            onClick={() => setPage((p) => Math.max(1, p - 1))}
+                            onClick={() => setPage(Math.max(1, page - 1))}
                             disabled={page === 1}
                             aria-label="Предишна страница"
                         >
@@ -166,7 +206,7 @@ export default function ArticlesMain({ articles, isAdmin = false }: NewsPageProp
                         ))}
                         <button
                             className="news-page__pag-btn"
-                            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                            onClick={() => setPage(Math.min(totalPages, page + 1))}
                             disabled={page === totalPages}
                             aria-label="Следваща страница"
                         >
