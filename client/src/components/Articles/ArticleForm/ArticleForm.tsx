@@ -1,9 +1,11 @@
-import { useState, useRef, useCallback } from "react";
-import "./CreateArticle.css";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
+import "./ArticleForm.css";
 import { articleService } from "../../../services/articleService";
 import { uploadService } from "../../../services/uploadService";
 
 type Category = "news" | "event";
+export type ArticleFormMode = "create" | "edit";
 
 interface ArticleFormData {
     title: string;
@@ -19,28 +21,71 @@ interface ArticleFormErrors {
 }
 
 interface ArticleFormProps {
-    onClose: () => void;
-    onSubmit: () => void;
+    mode: ArticleFormMode;
 }
 
-export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
+const COPY: Record<ArticleFormMode, { heading: string; sub: string; submitIdle: string; submitBusy: string }> = {
+    create: {
+        heading: "Нова статия",
+        sub: "Попълнете полетата, за да публикувате статия.",
+        submitIdle: "Публикувай",
+        submitBusy: "Публикуване...",
+    },
+    edit: {
+        heading: "Редактиране на статия",
+        sub: "Обновете полетата и запазете промените.",
+        submitIdle: "Запази промените",
+        submitBusy: "Запазване...",
+    },
+};
+
+export default function ArticleForm({ mode }: ArticleFormProps) {
+    const { slug } = useParams<{ slug: string }>();
+    const navigate = useNavigate();
+    const copy = COPY[mode];
+
     const [form, setForm] = useState<ArticleFormData>({
         title: "",
         category: "news",
         image: null,
         text: "",
     });
+    const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
     const [errors, setErrors] = useState<ArticleFormErrors>({});
     const [preview, setPreview] = useState<string | null>(null);
     const [dragging, setDragging] = useState(false);
+    const [loading, setLoading] = useState(mode === "edit");
     const [submitting, setSubmitting] = useState(false);
     const [serverError, setServerError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    useEffect(() => {
+        if (mode !== "edit" || !slug) return;
+
+        let cancelled = false;
+        setLoading(true);
+        articleService.getOne(slug)
+            .then((article) => {
+                if (cancelled) return;
+                setForm({
+                    title: article.title,
+                    category: article.category,
+                    image: null,
+                    text: article.text,
+                });
+                setExistingImageUrl(article.imageUrl);
+                setPreview(article.imageUrl);
+            })
+            .catch((err) => { if (!cancelled) setServerError(err instanceof Error ? err.message : "Грешка от сървъра."); })
+            .finally(() => { if (!cancelled) setLoading(false); });
+
+        return () => { cancelled = true; };
+    }, [mode, slug]);
+
     function validate(): boolean {
         const newErrors: ArticleFormErrors = {};
         if (!form.title.trim()) newErrors.title = "Заглавието е задължително.";
-        if (!form.image) newErrors.image = "Моля изберете изображение.";
+        if (!form.image && !existingImageUrl) newErrors.image = "Моля изберете изображение.";
         if (!form.text.trim()) newErrors.text = "Текстът е задължителен.";
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -82,27 +127,38 @@ export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
 
     function removeImage() {
         setForm((prev) => ({ ...prev, image: null }));
+        setExistingImageUrl(null);
         setPreview(null);
         if (inputRef.current) inputRef.current.value = "";
     }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (mode === "edit" && !slug) return;
         if (!validate()) return;
 
         setSubmitting(true);
         setServerError(null);
 
         try {
-            const imageUrl = form.image ? await uploadService.uploadImage(form.image) : undefined;
-            await articleService.create({
+            const imageUrl = form.image
+                ? await uploadService.uploadImage(form.image)
+                : existingImageUrl ?? undefined;
+
+            const payload = {
                 title: form.title,
                 category: form.category,
                 text: form.text,
                 imageUrl,
-            });
-            onSubmit();
-            onClose();
+            };
+
+            if (mode === "create") {
+                await articleService.create(payload);
+                navigate(-1);
+            } else {
+                await articleService.edit(slug!, payload);
+                navigate(`/novini-i-sabitiya/${slug}`);
+            }
         }
         catch (err) {
             setServerError(err instanceof Error ? err.message : "Грешка от сървъра.");
@@ -112,6 +168,23 @@ export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
         }
     }
 
+    function handleClose() {
+        navigate(-1);
+    }
+
+    if (loading) {
+        return (
+            <div className="article-form-wrap">
+                <div className="article-form-card">
+                    <div className="article-form__accent" />
+                    <div className="article-form__header">
+                        <p className="article-form__sub">Зареждане...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="article-form-wrap">
             <div className="article-form-card">
@@ -119,10 +192,10 @@ export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
 
                 <div className="article-form__header">
                     <div>
-                        <h2 className="article-form__title">Нова статия</h2>
-                        <p className="article-form__sub">Попълнете полетата, за да публикувате статия.</p>
+                        <h2 className="article-form__title">{copy.heading}</h2>
+                        <p className="article-form__sub">{copy.sub}</p>
                     </div>
-                    <button className="article-form__close" onClick={onClose} aria-label="Затвори">
+                    <button className="article-form__close" onClick={handleClose} aria-label="Затвори">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
                             <line x1="18" y1="6" x2="6" y2="18" />
                             <line x1="6" y1="6" x2="18" y2="18" />
@@ -236,11 +309,17 @@ export default function ArticleForm({ onClose, onSubmit }: ArticleFormProps) {
 
                     <div className="article-form__footer">
                         <button type="submit" className="article-form__submit" disabled={submitting}>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                <path d="M22 2L11 13" />
-                                <path d="M22 2L15 22 11 13 2 9l20-7z" />
-                            </svg>
-                            {submitting ? "Публикуване..." : "Публикувай"}
+                            {mode === "create" ? (
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                    <path d="M22 2L11 13" />
+                                    <path d="M22 2L15 22 11 13 2 9l20-7z" />
+                                </svg>
+                            ) : (
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                            )}
+                            {submitting ? copy.submitBusy : copy.submitIdle}
                         </button>
                     </div>
                 </form>
