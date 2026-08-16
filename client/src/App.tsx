@@ -10,6 +10,7 @@ import ArticlesMain from "./components/Articles/ArticlesMain/ArticlesMain"
 import ArticleDetails from "./components/Articles/ArticleDetails/ArticleDetails"
 import { AuthProvider } from "./context/AuthContext"
 import { useAuth } from "./hooks/useAuth"
+import AboutUsPage from "./components/AboutUsPage/AboutUsPage"
 
 function AppRoutes() {
   const { isAdmin } = useAuth();
@@ -26,6 +27,7 @@ function AppRoutes() {
         <Route path="/novini-i-sabitiya/create" element={<ArticleForm mode="create" />} />
         <Route path="/novini-i-sabitiya/:slug/edit" element={<ArticleForm mode="edit" />} />
         <Route path="/novini-i-sabitiya/:slug" element={<ArticleDetails />} />
+        <Route path="/za-nas" element={<AboutUsPage />} />
       </Routes>
       <Footer />
     </>

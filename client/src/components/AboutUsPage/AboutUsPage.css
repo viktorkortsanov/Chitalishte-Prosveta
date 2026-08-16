@@ -1,0 +1,347 @@
+.about-page {
+    padding: 64px 24px;
+    background: var(--c-surface);
+    min-height: 100vh;
+}
+
+.about-page__inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.about-page__label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-accent);
+    margin-bottom: 12px;
+}
+
+.about-page__label--center {
+    text-align: center;
+}
+
+.about-page__accent {
+    width: 40px;
+    height: 3px;
+    background: var(--c-accent);
+    border-radius: 2px;
+    margin-bottom: 16px;
+}
+
+.about-page__accent--center {
+    margin: 8px auto 16px;
+}
+
+.about-page__section-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.about-page__section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--c-text);
+    line-height: 1.3;
+}
+
+/* ── Hero ── */
+.about-page__hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 56px;
+}
+
+.about-page__hero-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.about-page__hero-title {
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--c-text);
+    line-height: 1.3;
+    margin-bottom: 20px;
+}
+
+.about-page__hero-body {
+    font-size: 15px;
+    color: var(--c-text-muted);
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+.about-page__hero-body:last-child {
+    margin-bottom: 0;
+}
+
+.about-page__hero-img-wrap {
+    flex-shrink: 0;
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.about-page__hero-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 12px;
+    border: 1px solid var(--c-border);
+    display: block;
+}
+
+.about-page__hero-caption {
+    font-size: 12px;
+    color: var(--c-text-muted);
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ── Timeline desktop ── */
+.about-page__tl {
+    display: flex;
+    flex-direction: column;
+}
+
+.about-page__tl-item {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    align-items: start;
+}
+
+.about-page__tl-content {
+    padding: 0 24px 48px;
+}
+
+.about-page__tl-content--left {
+    text-align: right;
+}
+
+.about-page__tl-content--right {
+    text-align: left;
+}
+
+.about-page__tl-content--empty {
+    padding-bottom: 48px;
+}
+
+.about-page__tl-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.about-page__tl-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--c-accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+    border: 2px solid var(--c-surface);
+}
+
+.about-page__tl-line {
+    flex: 1;
+    width: 2px;
+    background: var(--c-border);
+    margin-top: 4px;
+    min-height: 60px;
+}
+
+.about-page__tl-year {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-accent);
+    margin-bottom: 6px;
+}
+
+.about-page__tl-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--c-text);
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.about-page__tl-text {
+    font-size: 13px;
+    color: var(--c-text-muted);
+    line-height: 1.75;
+}
+
+.about-page__tl-img-wrap {
+    display: flex;
+}
+
+.about-page__tl-content--left .about-page__tl-img-wrap {
+    justify-content: flex-end;
+}
+
+.about-page__tl-content--right .about-page__tl-img-wrap {
+    justify-content: flex-start;
+}
+
+.about-page__tl-img {
+    width: 100%;
+    max-width: 300px;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--c-border);
+    display: block;
+}
+
+/* ── Quote ── */
+.about-page__quote {
+    background: var(--c-bg);
+    border: 1px solid var(--c-border);
+    border-left: 4px solid var(--c-accent);
+    border-radius: 0 12px 12px 0;
+    padding: 36px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.about-page__blockquote {
+    font-size: 18px;
+    font-style: italic;
+    color: var(--c-text);
+    line-height: 1.8;
+}
+
+.about-page__cite {
+    font-size: 13px;
+    color: var(--c-text-muted);
+    font-style: normal;
+}
+
+/* ── Mobile timeline ── */
+.about-page__tl-mobile {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+}
+
+.about-page__tl-mobile-item {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+}
+
+.about-page__tl-mobile-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 24px;
+}
+
+.about-page__tl-mobile-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--c-accent);
+    flex-shrink: 0;
+    margin-top: 3px;
+    border: 2px solid var(--c-surface);
+}
+
+.about-page__tl-mobile-line {
+    flex: 1;
+    width: 2px;
+    background: var(--c-border);
+    margin-top: 4px;
+}
+
+.about-page__tl-mobile-body {
+    flex: 1;
+    padding: 0 0 32px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.about-page__tl-mobile-body--odd {
+    align-items: flex-start;
+}
+
+.about-page__tl-mobile-body--even {
+    align-items: flex-start;
+}
+
+.about-page__tl-mobile-img {
+    width: 100%;
+    max-width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--c-border);
+    display: block;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .about-page {
+        padding: 40px 16px;
+    }
+
+    .about-page__inner {
+        gap: 56px;
+    }
+
+    .about-page__hero {
+        flex-direction: column-reverse;
+        gap: 24px;
+    }
+
+    .about-page__hero-img-wrap {
+        width: 100%;
+    }
+
+    .about-page__hero-img {
+        height: 220px;
+    }
+
+    .about-page__hero-title {
+        font-size: 22px;
+    }
+
+    .about-page__tl {
+        display: none;
+    }
+
+    .about-page__tl-mobile {
+        display: flex;
+    }
+
+    .about-page__quote {
+        padding: 24px 20px;
+    }
+
+    .about-page__blockquote {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 400px) {
+    .about-page__hero-title {
+        font-size: 20px;
+    }
+
+    .about-page__section-title {
+        font-size: 20px;
+    }
+}
