@@ -228,6 +228,93 @@
     font-style: normal;
 }
 
+/* ── Leadership ── */
+.about-page__leadership {
+    background: var(--c-bg);
+    border: 1px solid var(--c-border);
+    border-radius: 12px;
+    padding: 56px 40px;
+}
+
+.about-page__lead-grid {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.about-page__lead-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 220px;
+}
+
+.about-page__lead-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 3px solid rgba(232, 160, 48, 0.25);
+    overflow: hidden;
+    background: var(--c-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-page__lead-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.about-page__lead-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.about-page__lead-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--c-text);
+    text-align: center;
+}
+
+.about-page__lead-role {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-accent);
+    text-align: center;
+}
+
+.about-page__lead-email {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    text-decoration: none;
+    margin-top: 4px;
+}
+
+.about-page__lead-email svg {
+    width: 14px;
+    height: 14px;
+    color: var(--c-link);
+    flex-shrink: 0;
+}
+
+.about-page__lead-email span {
+    color: var(--c-link);
+}
+
+.about-page__lead-email:hover span {
+    text-decoration: underline;
+}
+
 /* ── Mobile timeline ── */
 .about-page__tl-mobile {
     display: none;
@@ -329,6 +416,14 @@
 
     .about-page__quote {
         padding: 24px 20px;
+    }
+
+    .about-page__leadership {
+        padding: 40px 20px;
+    }
+
+    .about-page__lead-grid {
+        gap: 32px;
     }
 
     .about-page__blockquote {

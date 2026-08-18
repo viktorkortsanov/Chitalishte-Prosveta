@@ -6,6 +6,8 @@ import galleryEventImg from "../../assets/images/1559388_797812840281793_8648069
 import sustaviImg from "../../assets/images/sustavi.jpg";
 import zvezdaImg from "../../assets/images/zvezda.jpg";
 import bachoKiro from "../../assets/images/bacho-kiro.jpg";
+import team1 from "../../assets/images/vasil.jpg"
+import team3 from "../../assets/images/viktor.jpg"
 
 const TIMELINE = [
     {
@@ -49,6 +51,27 @@ const TIMELINE = [
         text: `Танцови, певчески и театрални групи продължават да пазят възрожденския дух на читалището.`,
         side: "left",
         image: { src: sustaviImg, alt: "Съставите на читалището", position: "right" },
+    },
+];
+
+const LEADERSHIP = [
+    {
+        name: "Васил Василев",
+        role: "Председател",
+        email: "vasko_kl@abv.bg",
+        photo: team1
+    },
+    {
+        name: "Петра Беева",
+        role: "Секретар",
+        email: "polihronos@mail.bg",
+        photo: "",
+    },
+    {
+        name: "Виктор Корцанов",
+        role: "IT Специалист",
+        email: "viktorkortsanov@gmail.com",
+        photo: team3,
     },
 ];
 
@@ -179,6 +202,35 @@ export default function AboutUsPage() {
                         &bdquo;Светло и просторно помещение, украсено със слънце, пръскащо лъчи на всички страни, приютило голям шкаф с най-разнообразни книги...&ldquo;
                     </blockquote>
                     <cite className="about-page__cite">&mdash; Бачо Киро, 1872</cite>
+                </section>
+
+                <section className="about-page__leadership">
+                    <div className="about-page__section-header">
+                        <span className="about-page__label about-page__label--center">Ръководство</span>
+                        <div className="about-page__accent about-page__accent--center" />
+                        <h2 className="about-page__section-title">Нашият екип</h2>
+                    </div>
+
+                    <div className="about-page__lead-grid">
+                        {LEADERSHIP.map((person, i) => (
+                            <div key={i} className="about-page__lead-card">
+                                <div className="about-page__lead-photo">
+                                    <img src={person.photo} alt={person.name} className="about-page__lead-photo-img" />
+                                </div>
+                                <div className="about-page__lead-info">
+                                    <span className="about-page__lead-name">{person.name}</span>
+                                    <span className="about-page__lead-role">{person.role}</span>
+                                    <a href={`mailto:${person.email}`} className="about-page__lead-email">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                            <polyline points="22,6 12,13 2,6" />
+                                        </svg>
+                                        <span>{person.email}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </section>
 
             </div>
