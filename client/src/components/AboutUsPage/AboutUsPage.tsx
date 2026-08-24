@@ -7,6 +7,7 @@ import sustaviImg from "../../assets/images/sustavi.jpg";
 import zvezdaImg from "../../assets/images/zvezda.jpg";
 import bachoKiro from "../../assets/images/bacho-kiro.jpg";
 import team1 from "../../assets/images/vasil.jpg"
+import team2 from "../../assets/images/petra.jpg"
 import team3 from "../../assets/images/viktor.jpg"
 
 const TIMELINE = [
@@ -65,7 +66,7 @@ const LEADERSHIP = [
         name: "Петра Беева",
         role: "Секретар",
         email: "polihronos@mail.bg",
-        photo: "",
+        photo: team2,
     },
     {
         name: "Виктор Корцанов",
