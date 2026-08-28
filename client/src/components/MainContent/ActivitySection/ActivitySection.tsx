@@ -1,14 +1,6 @@
 import "./ActivitySection.css";
-import activity1 from "../../../assets/images/activity1.jpg"
-import activity2 from "../../../assets/images/activity2.jpg"
-import activity3 from "../../../assets/images/activity3.jpg"
 import { Link } from "react-router";
-
-const PHOTOS = [
-    activity1,
-    activity2,
-    activity3
-];
+import { ACTIVITY_PHOTOS as PHOTOS } from "../../../data/activityPhotos";
 
 export default function ActivitySection() {
     return (

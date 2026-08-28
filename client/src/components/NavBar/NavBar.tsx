@@ -3,15 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 import "./NavBar.css";
 import logoSrc from "../../assets/images/prosveta-logo.png";
-
-const NAV_LINKS = [
-    { label: "Начало", href: "/" },
-    { label: "За нас", href: "/za-nas" },
-    { label: "Новини и Събития", href: "/novini-i-sabitiya" },
-    { label: "Дейности", href: "/deynosti" },
-    { label: "Галерия", href: "/galeriya" },
-    { label: "Контакти", href: "/kontakti" },
-];
+import { NAV_LINKS } from "../../data/navLinks";
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);

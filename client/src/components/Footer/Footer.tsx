@@ -1,15 +1,7 @@
 import { Link } from "react-router";
 import "./Footer.css";
 import logoSrc from "../../assets/images/prosveta-logo.png"
-
-const NAV_LINKS = [
-    { label: "Начало", href: "/" },
-    { label: "За нас", href: "/za-nas" },
-    { label: "Новини", href: "/novini" },
-    { label: "Дейности", href: "/deynosti" },
-    { label: "Галерия", href: "/galeriya" },
-    { label: "Контакти", href: "/kontakti" },
-];
+import { FOOTER_LINKS } from "../../data/footerLinks";
 
 export default function Footer() {
     return (
@@ -61,7 +53,7 @@ export default function Footer() {
                 <div className="footer__col">
                     <h3 className="footer__col-title">Навигация</h3>
                     <nav className="footer__links">
-                        {NAV_LINKS.map((link) => (
+                        {FOOTER_LINKS.map((link) => (
                             <Link key={link.href} to={link.href} className="footer__link">
                                 {link.label}
                             </Link>
